@@ -8,14 +8,29 @@
 import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
+    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     let tableView: UITableView = {
         let table = UITableView()
         table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        table.register(UINib(nibName: String(describing: ToDoCell.self), bundle: .main), forCellReuseIdentifier: String(describing: ToDoCell.self))
         
         return table
+    }()
+    
+    //static var automatic: DefaultToggleStyle()
+
+    
+    //Date Picker
+    let datePicker: UIDatePicker = {
+        let datePicker = UIDatePicker()
+        datePicker.locale = .current
+        datePicker.datePickerMode = .dateAndTime
+        datePicker.preferredDatePickerStyle = .compact
+        datePicker.tintColor = .systemBlue
+        
+        return datePicker
     }()
     
     private var models = [ToDoListItem]()
@@ -23,6 +38,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any addditional setup after loading the view.
+        
         title = "To Do List"
         view.addSubview(tableView)
         getAllItems()
@@ -30,19 +46,36 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.dataSource = self
         tableView.frame = view.bounds
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAdd ))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAdd))
+        
+    }
+    
+    func showAlert(item: ToDoListItem) {
+        
+        let alert = UIAlertController(title: " ", message: "", preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "Submit", style: .cancel, handler: {
+            action in
+            self.setDueDate(item: item, dueDate: self.datePicker.date)
+            //            print("Date and time is set")
+        }))
+        alert.view.addSubview(datePicker)
+        
+        present(alert, animated: true)
     }
     
     @objc private func didTapAdd() {
         let alert = UIAlertController(title: "New Item", message: "Enter new item", preferredStyle: .alert)
         alert.addTextField(configurationHandler: nil)
-        alert.addAction(UIAlertAction(title: "Submit", style: .cancel, handler: { [weak self] _ in
+        alert.addAction(UIAlertAction(title: "Select due date", style: .cancel, handler: { _ in
             guard let field = alert.textFields?.first, let text = field.text, !text.isEmpty else {
                 return
             }
             
-            self?.createItem(name: text)
-             
+            let newItem = self.createItem(name: text)
+            
+            self.showAlert(item: newItem)
+            
         }))
         
         present(alert, animated: true)
@@ -52,19 +85,35 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return models.count
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let model = models[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = model.name
+        let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ToDoCell.self), for: indexPath) as? ToDoCell
         
-        return cell
+        
+        
+        var dateString = "No date"
+        if let dueDate = model.dueDate {
+            dateString = DateFormatter.dayMonthYearTimeFormatter.string(from: dueDate)
+        }
+        cell?.theLabel?.text = model.name!
+        cell?.dueDateLabel.text = dateString
+        
+        
+        
+        return cell ?? UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let item = models[indexPath.row]
-        let sheet = UIAlertController(title: "Edit", message: nil, preferredStyle: .actionSheet)
+        let sheet = UIAlertController(title: "Make Changes", message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+      
+        
         sheet.addAction(UIAlertAction(title: "Edit", style: .default , handler: { _ in
             
             let alert = UIAlertController(title: "Edit Item", message: "Edit your item", preferredStyle: .alert)
@@ -76,7 +125,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 }
                 
                 self?.updateItem(item: item, newName: newName)
-                 
+                
             }))
             
             self.present(alert, animated: true)
@@ -103,7 +152,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
-    func createItem(name: String) {
+    func createItem(name: String) -> ToDoListItem {
         let newItem = ToDoListItem(context: context)
         newItem.name = name
         newItem.createdAt = Date()
@@ -115,6 +164,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         catch {
             
         }
+        return newItem
     }
     
     func deleteItem(item: ToDoListItem) {
@@ -141,5 +191,31 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    func setDueDate(item: ToDoListItem, dueDate: Date) {
+        item.dueDate = dueDate
+        
+        do {
+            try context.save()
+            getAllItems()
+        }
+        catch {
+            
+        }
+    }
+    
+    struct CheckboxToggleStyle {
+//        static var checkbox: CheckboxToggleStyle {
+//
+//        }
+    }
+    
 }
 
+extension DateFormatter {
+    static let dayMonthYearTimeFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd MMMM YYYY, HH:mm"
+        
+        return dateFormatter
+    }()
+}
