@@ -11,15 +11,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
+    let checkbox = CheckboxView(frame: CGRect(x: 70, y: 200, width: 40, height: 40))
+    
     let tableView: UITableView = {
         let table = UITableView()
         table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         table.register(UINib(nibName: String(describing: ToDoCell.self), bundle: .main), forCellReuseIdentifier: String(describing: ToDoCell.self))
         
+        table.register(UINib(nibName: String(describing: CheckboxView.self), bundle: .main), forCellReuseIdentifier: String(describing: CheckboxView.self))
+        
         return table
     }()
     
-    //static var automatic: DefaultToggleStyle()
+   
 
     
     //Date Picker
@@ -48,7 +52,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAdd))
         
+       
     }
+    
+   
     
     func showAlert(item: ToDoListItem) {
         
@@ -94,14 +101,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ToDoCell.self), for: indexPath) as? ToDoCell
         
         
-        
         var dateString = "No date"
         if let dueDate = model.dueDate {
             dateString = DateFormatter.dayMonthYearTimeFormatter.string(from: dueDate)
         }
         cell?.theLabel?.text = model.name!
         cell?.dueDateLabel.text = dateString
-        
         
         
         return cell ?? UITableViewCell()
@@ -203,11 +208,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
-    struct CheckboxToggleStyle {
-//        static var checkbox: CheckboxToggleStyle {
-//
-//        }
+    func setChecked(item: ToDoListItem, name: String, check: Bool) {
+        item.name = name
+        item.check = check
+        
+        do {
+            try context.save()
+            getAllItems()
+        }
+        catch {
+            
+        }
     }
+    
     
 }
 

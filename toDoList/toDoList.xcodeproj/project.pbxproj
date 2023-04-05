@@ -18,6 +18,7 @@
 		CD8DCCB129AB4BC800D0282B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD8DCCAF29AB4BC800D0282B /* LaunchScreen.storyboard */; };
 		CD8DCCBA29AB8BDE00D0282B /* ToDoListItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8DCCB829AB8BDE00D0282B /* ToDoListItem+CoreDataClass.swift */; };
 		CD8DCCBB29AB8BDE00D0282B /* ToDoListItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8DCCB929AB8BDE00D0282B /* ToDoListItem+CoreDataProperties.swift */; };
+		CD99BA9D29B21FA300D831B5 /* CheckboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD99BA9C29B21FA300D831B5 /* CheckboxView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		CD8DCCB229AB4BC800D0282B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CD8DCCB829AB8BDE00D0282B /* ToDoListItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ToDoListItem+CoreDataClass.swift"; sourceTree = "<group>"; };
 		CD8DCCB929AB8BDE00D0282B /* ToDoListItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ToDoListItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		CD99BA9C29B21FA300D831B5 /* CheckboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +83,7 @@
 				CD8DCCA329AB4BC500D0282B /* SceneDelegate.swift */,
 				CD8DCCA529AB4BC500D0282B /* ViewController.swift */,
 				CD8DCCA729AB4BC500D0282B /* Main.storyboard */,
+				CD99BA9C29B21FA300D831B5 /* CheckboxView.swift */,
 				CD8DCCAD29AB4BC800D0282B /* Assets.xcassets */,
 				CD8DCCAF29AB4BC800D0282B /* LaunchScreen.storyboard */,
 				CD8DCCB229AB4BC800D0282B /* Info.plist */,
@@ -177,6 +180,7 @@
 				CD8DCCBA29AB8BDE00D0282B /* ToDoListItem+CoreDataClass.swift in Sources */,
 				CD8DCCBB29AB8BDE00D0282B /* ToDoListItem+CoreDataProperties.swift in Sources */,
 				CD8DCCAC29AB4BC500D0282B /* toDoList.xcdatamodeld in Sources */,
+				CD99BA9D29B21FA300D831B5 /* CheckboxView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
